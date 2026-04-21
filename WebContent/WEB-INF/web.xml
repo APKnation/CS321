@@ -1,0 +1,15 @@
+<web-app>
+
+  <!-- Give your servlet a name and link it to the class -->
+  <servlet>
+    <servlet-name>HelloServlet</servlet-name>
+    <servlet-class>HelloServlet</servlet-class>
+  </servlet>
+
+  <!-- Map a URL to your servlet -->
+  <servlet-mapping>
+    <servlet-name>HelloServlet</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+
+</web-app>
