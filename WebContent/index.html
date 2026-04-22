@@ -1,5 +1,550 @@
-<form action="/yourapp/login" method="post">
-  Username: <input type="text" name="username"><br>
-  Password: <input type="password" name="password"><br>
-  <input type="submit" value="Login">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopEase – Your Online Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0d0d0d;
+      --white: #f7f5f0;
+      --cream: #efe9dc;
+      --accent: #c8502a;
+      --accent2: #e8a87c;
+      --text: #2a2a2a;
+      --muted: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(247,245,240,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--black);
+      letter-spacing: -1px;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--text);
+      font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-actions { display: flex; gap: 1rem; align-items: center; }
+
+    .btn {
+      display: inline-block; text-decoration: none;
+      padding: 0.65rem 1.6rem; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.5px; cursor: pointer;
+      transition: all 0.25s; border: none;
+    }
+    .btn-outline {
+      border: 1.5px solid var(--black); color: var(--black);
+      background: transparent;
+    }
+    .btn-outline:hover { background: var(--black); color: var(--white); }
+    .btn-fill { background: var(--accent); color: var(--white); }
+    .btn-fill:hover { background: #a8401e; }
+    .btn-lg { padding: 1rem 2.4rem; font-size: 1rem; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 6rem 4rem 4rem;
+      gap: 4rem;
+      background: var(--white);
+      position: relative; overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #f0e0d0 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--cream); color: var(--accent);
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 0.4rem 1rem; border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 900; line-height: 1.05;
+      color: var(--black); margin-bottom: 1.5rem;
+    }
+    .hero h1 em { color: var(--accent); font-style: italic; }
+
+    .hero p {
+      font-size: 1.05rem; color: var(--muted);
+      line-height: 1.7; max-width: 420px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .hero-stats {
+      display: flex; gap: 3rem; margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700; color: var(--black);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* Hero image side */
+    .hero-visual {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-card {
+      background: var(--cream);
+      border-radius: 8px;
+      width: 100%; max-width: 440px;
+      padding: 2.5rem;
+      position: relative;
+      animation: floatUp 6s ease-in-out infinite;
+    }
+
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hero-card-img {
+      width: 100%; height: 280px;
+      background: linear-gradient(135deg, #e8d5c0 0%, #d4b896 100%);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; margin-bottom: 1.5rem;
+    }
+
+    .hero-card-tag {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .hero-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; margin-bottom: 0.5rem;
+    }
+    .hero-card-price {
+      font-size: 1.2rem; font-weight: 500; color: var(--accent);
+    }
+
+    .badge {
+      position: absolute; top: -15px; right: -15px;
+      background: var(--accent); color: white;
+      width: 70px; height: 70px; border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; line-height: 1.2;
+      text-align: center;
+    }
+
+    /* ── CATEGORIES ── */
+    .section {
+      padding: 6rem 4rem;
+    }
+    .section-header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      font-weight: 700; line-height: 1.1;
+    }
+    .section-header a {
+      color: var(--accent); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 2px;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .category-card {
+      background: var(--cream);
+      border-radius: 6px; padding: 2rem;
+      text-align: center; text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .category-card:hover {
+      background: var(--black); color: var(--white);
+      transform: translateY(-4px);
+    }
+    .category-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .category-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.3rem; }
+    .category-card p { font-size: 0.8rem; color: var(--muted); }
+    .category-card:hover p { color: rgba(255,255,255,0.6); }
+
+    /* ── PRODUCTS ── */
+    .products-section { background: var(--cream); }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: 6px; overflow: hidden;
+      transition: all 0.3s;
+    }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+    .product-img {
+      height: 220px;
+      background: linear-gradient(135deg, #e8d5c0, #d0bfa8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      position: relative;
+    }
+
+    .product-badge {
+      position: absolute; top: 1rem; left: 1rem;
+      background: var(--accent); color: white;
+      font-size: 0.7rem; font-weight: 600;
+      padding: 0.25rem 0.6rem; border-radius: 2px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .product-info { padding: 1.5rem; }
+    .product-cat {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .product-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; margin-bottom: 0.8rem;
+    }
+    .product-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .product-price { font-size: 1.1rem; font-weight: 600; color: var(--accent); }
+    .product-price .old { text-decoration: line-through; color: var(--muted); font-size: 0.85rem; margin-right: 0.4rem; font-weight: 400; }
+
+    .add-btn {
+      background: var(--black); color: var(--white);
+      border: none; padding: 0.5rem 1rem;
+      border-radius: 2px; font-size: 0.8rem;
+      cursor: pointer; transition: background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .add-btn:hover { background: var(--accent); }
+
+    /* ── BANNER ── */
+    .banner {
+      background: var(--black); color: var(--white);
+      padding: 6rem 4rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .banner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+    .banner h2 em { color: var(--accent2); font-style: italic; }
+    .banner p { color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 2rem; }
+
+    .banner-features { display: flex; flex-direction: column; gap: 1.5rem; }
+    .banner-feature { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 4px;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .feature-text h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .feature-text p { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black); color: rgba(255,255,255,0.5);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 3rem 4rem;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 900;
+      color: var(--white);
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0; transform: translateY(20px);
+      animation: fadeIn 0.7s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; }
+      .hero-visual { display: none; }
+      .section { padding: 4rem 1.5rem; }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      .products-grid { grid-template-columns: 1fr 1fr; }
+      .banner { grid-template-columns: 1fr; padding: 4rem 1.5rem; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Shop<span>Ease</span></div>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Categories</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline">Login</a>
+      <a href="register.html" class="btn btn-fill">Register</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag fade-in">🛍 New Collection 2025</div>
+      <h1 class="fade-in delay-1">Shop <em>Smarter,</em><br>Live Better.</h1>
+      <p class="fade-in delay-2">Discover thousands of premium products at unbeatable prices. Fast shipping, easy returns, and a shopping experience you will love.</p>
+      <div class="hero-btns fade-in delay-3">
+        <a href="products" class="btn btn-fill btn-lg">Shop Now</a>
+        <a href="register.html" class="btn btn-outline btn-lg">Create Account</a>
+      </div>
+      <div class="hero-stats fade-in delay-4">
+        <div>
+          <div class="stat-num">10K+</div>
+          <div class="stat-label">Products</div>
+        </div>
+        <div>
+          <div class="stat-num">50K+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div>
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual fade-in delay-2">
+      <div class="hero-card">
+        <div class="badge">HOT<br>DEAL</div>
+        <div class="hero-card-img">👟</div>
+        <div class="hero-card-tag">Featured Product</div>
+        <h3>Premium Sneakers</h3>
+        <div class="hero-card-price">$89.99</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Shop by<br>Category</h2>
+      <a href="products">View All →</a>
+    </div>
+    <div class="categories-grid">
+      <a class="category-card" href="products">
+        <div class="category-icon">👔</div>
+        <h3>Fashion</h3>
+        <p>240+ Items</p>
+      </a>
+      <a class="category-card" href="products">
+        <div class="category-icon">💻</div>
+        <h3>Electronics</h3>
+        <p>180+ Items</p>
+      </a>
+      <a class="category-card" href="products">
+        <div class="category-icon">🏠</div>
+        <h3>Home & Living</h3>
+        <p>320+ Items</p>
+      </a>
+      <a class="category-card" href="products">
+        <div class="category-icon">⚽</div>
+        <h3>Sports</h3>
+        <p>150+ Items</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section products-section">
+    <div class="section-header">
+      <h2>Featured<br>Products</h2>
+      <a href="products">See All Products →</a>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-img">
+          👟
+          <span class="product-badge">New</span>
+        </div>
+        <div class="product-info">
+          <div class="product-cat">Fashion</div>
+          <h3>Classic Running Shoes</h3>
+          <div class="product-footer">
+            <div class="product-price">
+              <span class="old">$120</span>$89.99
+            </div>
+            <button class="add-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">📱</div>
+        <div class="product-info">
+          <div class="product-cat">Electronics</div>
+          <h3>Wireless Headphones Pro</h3>
+          <div class="product-footer">
+            <div class="product-price">$59.99</div>
+            <button class="add-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          ☕
+          <span class="product-badge">Sale</span>
+        </div>
+        <div class="product-info">
+          <div class="product-cat">Home & Living</div>
+          <h3>Ceramic Coffee Mug Set</h3>
+          <div class="product-footer">
+            <div class="product-price">
+              <span class="old">$45</span>$29.99
+            </div>
+            <button class="add-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BANNER -->
+  <section class="banner">
+    <div>
+      <h2>Why Choose <em>ShopEase?</em></h2>
+      <p>We make online shopping simple, secure, and satisfying. Join thousands of happy customers today.</p>
+      <a href="register.html" class="btn btn-fill btn-lg">Get Started Free</a>
+    </div>
+    <div class="banner-features">
+      <div class="banner-feature">
+        <div class="feature-icon">🚀</div>
+        <div class="feature-text">
+          <h4>Fast Delivery</h4>
+          <p>Get your orders delivered in 2-3 business days</p>
+        </div>
+      </div>
+      <div class="banner-feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h4>Secure Payments</h4>
+          <p>Your payment info is always safe with us</p>
+        </div>
+      </div>
+      <div class="banner-feature">
+        <div class="feature-icon">↩️</div>
+        <div class="feature-text">
+          <h4>Easy Returns</h4>
+          <p>30-day hassle-free return policy</p>
+        </div>
+      </div>
+      <div class="banner-feature">
+        <div class="feature-icon">💬</div>
+        <div class="feature-text">
+          <h4>24/7 Support</h4>
+          <p>We are here whenever you need help</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Shop<span>Ease</span></div>
+    <div>© 2025 ShopEase. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="products">Products</a>
+    </div>
+  </footer>
+
+</body>
+</html>
